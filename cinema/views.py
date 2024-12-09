@@ -30,17 +30,14 @@ class GenreList(APIView):
 
 
 class GenreDetail(APIView):
-    def get_object(self, pk: int) -> Genre | None:
-        return get_object_or_404(Genre, pk=pk)
-
     def get(self, request, pk: int) -> Response:
-        genre = self.get_object(pk=pk)
+        genre = get_object_or_404(Genre, pk=pk)
         serializer = GenreSerializer(genre)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk: int) -> Response:
-        genre = self.get_object(pk=pk)
+        genre = get_object_or_404(Genre, pk=pk)
         serializer = GenreSerializer(genre, request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -48,7 +45,7 @@ class GenreDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk: int) -> Response:
-        genre = self.get_object(pk=pk)
+        genre = get_object_or_404(Genre, pk=pk)
         serializer = GenreSerializer(genre, request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -56,7 +53,7 @@ class GenreDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk: int) -> Response:
-        self.get_object(pk=pk).delete()
+        get_object_or_404(Genre, pk=pk).delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -68,7 +65,7 @@ class ActorList(
 ):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
-
+    #
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
